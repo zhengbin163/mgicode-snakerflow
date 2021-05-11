@@ -23,6 +23,7 @@ import org.snaker.engine.IProcessService;
 import org.snaker.engine.SnakerException;
 import org.snaker.engine.access.Page;
 import org.snaker.engine.access.QueryFilter;
+import org.snaker.engine.bean.K8splusOrderBean;
 import org.snaker.engine.cache.Cache;
 import org.snaker.engine.cache.CacheManager;
 import org.snaker.engine.cache.CacheManagerAware;
@@ -250,9 +251,9 @@ public class ProcessService extends AccessService implements IProcessService, Ca
 	 */
 	public void cascadeRemove(String id) {
 		Process entity = access().getProcess(id);
-		List<HistoryOrder> historyOrders = access().getHistoryOrders(null, new QueryFilter().setProcessId(id));
+		List<K8splusOrderBean> historyOrders = access().getHistoryOrders(null, new QueryFilter().setProcessId(id));
 
-		for(HistoryOrder historyOrder : historyOrders) {
+		for(K8splusOrderBean historyOrder : historyOrders) {
 			ServiceContext.getEngine().order().cascadeRemove(historyOrder.getId());
 		}
 		access().deleteProcess(entity);

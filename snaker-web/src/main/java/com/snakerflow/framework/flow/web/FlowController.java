@@ -4,6 +4,7 @@ import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.snaker.engine.access.Page;
 import org.snaker.engine.access.QueryFilter;
+import org.snaker.engine.bean.K8splusOrderBean;
 import org.snaker.engine.entity.Process;
 import org.snaker.engine.entity.HistoryOrder;
 
@@ -51,7 +52,7 @@ public class FlowController {
      * @return
      */
     @RequestMapping(value = "order", method= RequestMethod.GET)
-    public String order(Model model, Page<HistoryOrder> page) {
+    public String order(Model model, Page<K8splusOrderBean> page) {
         facets.getEngine().query().getHistoryOrders(page, new QueryFilter());
         model.addAttribute("page", page);
         return "snaker/order";

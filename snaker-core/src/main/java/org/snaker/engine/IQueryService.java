@@ -18,6 +18,7 @@ import java.util.List;
 
 import org.snaker.engine.access.Page;
 import org.snaker.engine.access.QueryFilter;
+import org.snaker.engine.bean.K8splusOrderBean;
 import org.snaker.engine.entity.HistoryOrder;
 import org.snaker.engine.entity.HistoryTask;
 import org.snaker.engine.entity.Order;
@@ -87,7 +88,7 @@ public interface IQueryService {
 	 * @param filter 查询过滤器
 	 * @return List<Order> 活动实例集合
 	 */
-	List<Order> getActiveOrders(QueryFilter filter);
+	List<K8splusOrderBean> getActiveOrders(QueryFilter filter);
 	
 	/**
 	 * 根据filter分页查询流程实例列表
@@ -95,14 +96,14 @@ public interface IQueryService {
 	 * @param filter 查询过滤器
 	 * @return List<Order> 活动实例集合
 	 */
-	List<Order> getActiveOrders(Page<Order> page, QueryFilter filter);
+	List<K8splusOrderBean> getActiveOrders(Page<K8splusOrderBean> page, QueryFilter filter);
 	
 	/**
 	 * 根据filter查询历史流程实例
 	 * @param filter 查询过滤器
 	 * @return List<HistoryOrder> 历史实例集合
 	 */
-	List<HistoryOrder> getHistoryOrders(QueryFilter filter);
+	List<K8splusOrderBean> getHistoryOrders(QueryFilter filter);
 	
 	/**
 	 * 根据filter分页查询历史流程实例
@@ -110,7 +111,7 @@ public interface IQueryService {
 	 * @param filter 查询过滤器
 	 * @return List<HistoryOrder> 历史实例集合
 	 */
-	List<HistoryOrder> getHistoryOrders(Page<HistoryOrder> page, QueryFilter filter);
+	List<K8splusOrderBean> getHistoryOrders(Page<K8splusOrderBean> page, QueryFilter filter);
 	
 	/**
 	 * 根据filter查询所有已完成的任务

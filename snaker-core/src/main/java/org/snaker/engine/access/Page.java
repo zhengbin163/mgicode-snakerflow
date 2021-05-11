@@ -47,6 +47,11 @@ public class Page<T> {
 		this.pageSize = pageSize;
 	}
 
+	public Page(int pageNo, int pageSize) {
+		setPageNo(pageNo);
+		this.pageSize = pageSize;
+	}
+
 	/**
 	 * 获得当前页的页号,默认为1.
 	 */

@@ -18,6 +18,7 @@ import java.util.List;
 
 import org.snaker.engine.access.Page;
 import org.snaker.engine.access.QueryFilter;
+import org.snaker.engine.bean.K8splusOrderBean;
 import org.snaker.engine.entity.CCOrder;
 import org.snaker.engine.entity.HistoryOrder;
 import org.snaker.engine.entity.HistoryTask;
@@ -133,6 +134,13 @@ public interface DBAccess {
 	 * @param actors 参与者集合
 	 */
 	public void removeTaskActor(String taskId, String... actors);
+
+	/**
+	 * 刷新参与者
+	 * @param taskId 任务id
+	 * @param actors 参与者集合
+	 */
+	public void refreshTaskActor(String taskId, String... actors);
 	
 	/**
 	 * 迁移活动实例
@@ -297,7 +305,7 @@ public interface DBAccess {
 	 * @param filter 查询过滤器
 	 * @return List<Order> 活动流程实例集合
 	 */
-	public List<Order> getActiveOrders(Page<Order> page, QueryFilter filter);
+	public List<K8splusOrderBean> getActiveOrders(Page<K8splusOrderBean> page, QueryFilter filter);
 	
 	/**
 	 * 分页查询活动任务列表
@@ -313,7 +321,7 @@ public interface DBAccess {
 	 * @param filter 查询过滤器
 	 * @return List<HistoryOrder> 历史流程实例集合
 	 */
-	public List<HistoryOrder> getHistoryOrders(Page<HistoryOrder> page, QueryFilter filter);
+	public List<K8splusOrderBean> getHistoryOrders(Page<K8splusOrderBean> page, QueryFilter filter);
 	
 	/**
 	 * 根据参与者分页查询已完成的历史任务

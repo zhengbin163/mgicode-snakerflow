@@ -18,6 +18,7 @@ import java.util.List;
 
 import org.snaker.engine.IQueryService;
 import org.snaker.engine.access.QueryFilter;
+import org.snaker.engine.bean.K8splusOrderBean;
 import org.snaker.engine.core.Execution;
 import org.snaker.engine.entity.Order;
 import org.snaker.engine.entity.Task;
@@ -48,7 +49,7 @@ public abstract class AbstractMergeHandler implements IHandler {
 		if(model.containsNodeNames(SubProcessModel.class, activeNodes)) {
 			QueryFilter filter = new QueryFilter().setParentId(order.getId())
 					.setExcludedIds(new String[]{execution.getChildOrderId()});
-			List<Order> orders = queryService.getActiveOrders(filter);
+			List<K8splusOrderBean> orders = queryService.getActiveOrders(filter);
 			//如果所有子流程都已完成，则表示可合并
 			if(orders == null || orders.isEmpty()) {
 				isSubProcessMerged = true;

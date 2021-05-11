@@ -196,4 +196,10 @@ public abstract class HibernateAccess extends AbstractDBAccess implements DBAcce
     }
 
     public abstract Blob createBlob(byte[] bytes);
+
+	public void refreshTaskActor(String taskId, String... actors) {
+		if(1 == 1){
+			throw new SnakerException("目前不支持Hibernate方式的操作（refreshTaskActor）！");
+		}
+	}
 }

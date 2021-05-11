@@ -19,6 +19,7 @@ import java.util.List;
 import org.snaker.engine.IQueryService;
 import org.snaker.engine.access.Page;
 import org.snaker.engine.access.QueryFilter;
+import org.snaker.engine.bean.K8splusOrderBean;
 import org.snaker.engine.entity.HistoryOrder;
 import org.snaker.engine.entity.HistoryTask;
 import org.snaker.engine.entity.HistoryTaskActor;
@@ -82,22 +83,22 @@ public class QueryService extends AccessService implements IQueryService {
 		return access().getActiveTasks(page, filter);
 	}
 	
-	public List<Order> getActiveOrders(QueryFilter filter) {
+	public List<K8splusOrderBean> getActiveOrders(QueryFilter filter) {
 		AssertHelper.notNull(filter);
 		return access().getActiveOrders(null, filter);
 	}
 	
-	public List<Order> getActiveOrders(Page<Order> page, QueryFilter filter) {
+	public List<K8splusOrderBean> getActiveOrders(Page<K8splusOrderBean> page, QueryFilter filter) {
 		AssertHelper.notNull(filter);
 		return access().getActiveOrders(page, filter);
 	}
 	
-	public List<HistoryOrder> getHistoryOrders(QueryFilter filter) {
+	public List<K8splusOrderBean> getHistoryOrders(QueryFilter filter) {
 		AssertHelper.notNull(filter);
 		return access().getHistoryOrders(null, filter);
 	}
 
-	public List<HistoryOrder> getHistoryOrders(Page<HistoryOrder> page, QueryFilter filter) {
+	public List<K8splusOrderBean> getHistoryOrders(Page<K8splusOrderBean> page, QueryFilter filter) {
 		AssertHelper.notNull(filter);
 		return access().getHistoryOrders(page, filter);
 	}

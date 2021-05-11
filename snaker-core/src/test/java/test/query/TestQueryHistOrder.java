@@ -3,6 +3,7 @@ package test.query;
 import org.junit.Test;
 import org.snaker.engine.access.Page;
 import org.snaker.engine.access.QueryFilter;
+import org.snaker.engine.bean.K8splusOrderBean;
 import org.snaker.engine.entity.HistoryOrder;
 import org.snaker.engine.test.TestSnakerBase;
 
@@ -16,6 +17,6 @@ public class TestQueryHistOrder extends TestSnakerBase {
 	public void test() {
 		System.out.println(engine.query().getHistoryOrders(
 				new QueryFilter().setCreateTimeStart("2014-01-01").setName("simple").setState(0).setProcessType("预算管理流程1")));
-		System.out.println(engine.query().getHistoryOrders(new Page<HistoryOrder>(), new QueryFilter()));
+		System.out.println(engine.query().getHistoryOrders(new Page<K8splusOrderBean>(), new QueryFilter()));
 	}
 }

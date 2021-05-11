@@ -27,6 +27,7 @@ import org.snaker.engine.DBAccess;
 import org.snaker.engine.SnakerException;
 import org.snaker.engine.access.dialect.Dialect;
 import org.snaker.engine.access.jdbc.JdbcHelper;
+import org.snaker.engine.bean.K8splusOrderBean;
 import org.snaker.engine.core.ServiceContext;
 import org.snaker.engine.entity.CCOrder;
 import org.snaker.engine.entity.HistoryOrder;
@@ -180,7 +181,7 @@ public abstract class AbstractDBAccess implements DBAccess {
 		} else {
 			Object[] args = new Object[]{process.getId(), process.getName(), process.getDisplayName(), process.getType(), 
 					process.getInstanceUrl(), process.getState(), process.getVersion(), process.getCreateTime(), process.getCreator()};
-			int[] type = new int[]{Types.VARCHAR, Types.VARCHAR, Types.VARCHAR, Types.INTEGER, 
+			int[] type = new int[]{Types.VARCHAR, Types.VARCHAR, Types.VARCHAR, Types.INTEGER,
 					Types.VARCHAR, Types.INTEGER, Types.INTEGER, Types.VARCHAR, Types.VARCHAR};
 			saveOrUpdate(buildMap(PROCESS_INSERT, args, type));
 		}
@@ -323,6 +324,21 @@ public abstract class AbstractDBAccess implements DBAccess {
 			for(String actorId : actors) {
 				int[] type = new int[]{Types.VARCHAR, Types.VARCHAR};
 				saveOrUpdate(buildMap(TASK_ACTOR_REDUCE, new Object[]{taskId, actorId}, type));
+			}
+		}
+	}
+
+	/**
+	 * 删除原有的参与者，添加新的参与者，即刷新当前task的所有人
+	 * @param taskId
+	 * @param actors
+	 */
+	public void refreshTaskActor(String taskId, String... actors) {
+		if(!isORM()) {
+			int[] type = new int[]{Types.VARCHAR, Types.VARCHAR};
+			saveOrUpdate(buildMap(TASK_ACTOR_DELETE, new Object[]{taskId}, type));
+			for(String actorId : actors) {
+				saveOrUpdate(buildMap(TASK_ACTOR_INSERT, new Object[]{taskId, actorId}, type));
 			}
 		}
 	}
@@ -580,8 +596,9 @@ public abstract class AbstractDBAccess implements DBAccess {
 		return queryList(page, filter, Process.class, sql.toString(), paramList.toArray());
 	}
 
-	public List<Order> getActiveOrders(Page<Order> page, QueryFilter filter) {
-        StringBuilder sql = new StringBuilder(QUERY_ORDER);
+	public List<K8splusOrderBean> getActiveOrders(Page<K8splusOrderBean> page, QueryFilter filter) {
+//        StringBuilder sql = new StringBuilder(QUERY_ORDER);
+        StringBuilder sql = new StringBuilder("select o.id,o.creator,o.create_Time,o.expire_Time,o.last_Update_Time,o.last_Updator,o.priority, o.version, p.name as process_Type, p.display_name as process_Type_Name from wf_order o ");
         sql.append(" left join wf_process p on p.id = o.process_id ");
 		sql.append(" where 1=1 ");
 		List<Object> paramList = new ArrayList<Object>();
@@ -640,12 +657,21 @@ public abstract class AbstractDBAccess implements DBAccess {
 			sql.append(" and o.order_No = ? ");
 			paramList.add(filter.getOrderNo());
 		}
-
+		if(ArrayUtils.isNotEmpty(filter.getActorIds())) {
+			sql.append(" and exists(select 1 from wf_task wht " +
+					"join wf_task_actor whta on wht.id=whta.task_id where wht.order_id=o.id and whta.actor_id in (");
+			for(int i = 0; i < filter.getActorIds().length; i++) {
+				sql.append("?,");
+				paramList.add(filter.getActorIds()[i]);
+			}
+			sql.deleteCharAt(sql.length() - 1);
+			sql.append(")) ");
+		}
         if(!filter.isOrderBySetted()) {
             filter.setOrder(QueryFilter.DESC);
             filter.setOrderBy("o.create_Time");
         }
-        return queryList(page, filter, Order.class, sql.toString(), paramList.toArray());
+        return queryList(page, filter, K8splusOrderBean.class, sql.toString(), paramList.toArray());
 	}
 
 	public List<Task> getActiveTasks(Page<Task> page, QueryFilter filter) {
@@ -702,9 +728,10 @@ public abstract class AbstractDBAccess implements DBAccess {
         return queryList(page, filter, Task.class, sql.toString(), paramList.toArray());
 	}
 
-	public List<HistoryOrder> getHistoryOrders(Page<HistoryOrder> page, QueryFilter filter) {
-        StringBuilder sql = new StringBuilder(QUERY_HIST_ORDER);
-        sql.append(" left join wf_process p on p.id = o.process_id ");
+	public List<K8splusOrderBean> getHistoryOrders(Page<K8splusOrderBean> page, QueryFilter filter) {
+//        StringBuilder sql = new StringBuilder(QUERY_HIST_ORDER);
+		StringBuilder sql = new StringBuilder("select o.id,o.order_State,o.priority,o.creator,o.create_Time,o.end_Time,o.parent_Id,o.expire_Time, p.name as process_Type, p.display_name as process_Type_Name from wf_hist_order o  ");
+		sql.append(" left join wf_process p on p.id = o.process_id ");
 		sql.append(" where 1=1 ");
 		List<Object> paramList = new ArrayList<Object>();
 		if(filter.getOperators() != null && filter.getOperators().length > 0) {
@@ -757,11 +784,21 @@ public abstract class AbstractDBAccess implements DBAccess {
 			sql.append(" and o.order_No = ? ");
 			paramList.add(filter.getOrderNo());
 		}
+		if(ArrayUtils.isNotEmpty(filter.getActorIds())) {
+			sql.append(" and exists(select 1 from wf_hist_task wht " +
+					"join wf_hist_task_actor whta on wht.id=whta.task_id where wht.order_id=o.id and whta.actor_id in (");
+			for(int i = 0; i < filter.getActorIds().length; i++) {
+				sql.append("?,");
+				paramList.add(filter.getActorIds()[i]);
+			}
+			sql.deleteCharAt(sql.length() - 1);
+			sql.append(")) ");
+		}
         if(!filter.isOrderBySetted()) {
             filter.setOrder(QueryFilter.DESC);
             filter.setOrderBy("o.create_Time");
         }
-        return queryList(page, filter, HistoryOrder.class, sql.toString(), paramList.toArray());
+        return queryList(page, filter, K8splusOrderBean.class, sql.toString(), paramList.toArray());
 	}
 	
 	public List<HistoryTask> getHistoryTasks(Page<HistoryTask> page, QueryFilter filter) {

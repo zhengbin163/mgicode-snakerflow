@@ -16,6 +16,7 @@ package org.snaker.engine.core;
 
 import java.util.*;
 
+import org.apache.commons.lang.StringUtils;
 import org.snaker.engine.*;
 import org.snaker.engine.entity.*;
 import org.snaker.engine.entity.Process;
@@ -239,7 +240,26 @@ public class TaskService extends AccessService implements ITaskService {
 			}
 		}
 	}
-	
+
+	/**
+	 * 向指定任务移除参与者
+	 */
+	public void refreshTaskActor(String taskId, String... actors) {
+		Task task = access().getTask(taskId);
+		AssertHelper.notNull(task, "指定的任务[id=" + taskId + "]不存在");
+		if(actors == null || actors.length == 0) return;
+		if(task.isMajor()) {
+			access().refreshTaskActor(task.getId(), actors);
+			Map<String, Object> taskData = task.getVariableMap();
+
+			//替换掉
+			String actor = StringUtils.join(actors, ",");
+			taskData.put(Task.KEY_ACTOR, actor);
+			task.setVariable(JsonHelper.toJson(taskData));
+			access().updateTask(task);
+		}
+	}
+
 	/**
 	 * 撤回指定的任务
 	 */
@@ -437,7 +457,7 @@ public class TaskService extends AccessService implements ITaskService {
 	 * @param execution 执行对象
 	 * @return 参与者数组
 	 */
-	private String[] getTaskActors(TaskModel model, Execution execution) {
+	public String[] getTaskActors(TaskModel model, Execution execution) {
 		Object assigneeObject = null;
         AssignmentHandler handler = model.getAssignmentHandlerObject();
 		if(StringHelper.isNotEmpty(model.getAssignee())) {

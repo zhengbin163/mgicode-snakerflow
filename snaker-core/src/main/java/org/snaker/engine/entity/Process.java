@@ -77,7 +77,7 @@ public class Process implements Serializable {
     /**
      * 流程定义xml
      */
-    private Blob content;
+    private String content;
     /**
      * 流程定义字节数组
      */
@@ -136,24 +136,29 @@ public class Process implements Serializable {
 	}
 	public byte[] getDBContent() {
 		if(this.content != null) {
-			try {
-				return this.content.getBytes(1L, Long.valueOf(this.content.length()).intValue());
-			} catch (Exception e) {
-				try {
-					InputStream is = content.getBinaryStream();
-					return StreamHelper.readBytes(is);
-				} catch (Exception e1) {
-					throw new SnakerException("couldn't extract stream out of blob", e1);
-				}
-			}
+//			try {
+//				return this.content.getBytes(1L, Long.valueOf(this.content.length()).intValue());
+//			} catch (Exception e) {
+//				try {
+//					InputStream is = content.getBinaryStream();
+//					return StreamHelper.readBytes(is);
+//				} catch (Exception e1) {
+//					throw new SnakerException("couldn't extract stream out of blob", e1);
+//				}
+//			}
+			return this.content.getBytes();
 		}
-		
+
 		return bytes;
 	}
-	public Blob getContent() {
+	public String getContent() {
 		return content;
 	}
-	public void setContent(Blob content) {
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	public void setContent(Blob blob) {
 		this.content = content;
 	}
 	public byte[] getBytes() {

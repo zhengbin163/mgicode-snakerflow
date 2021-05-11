@@ -3,6 +3,7 @@ package test.query;
 import org.junit.Test;
 import org.snaker.engine.access.Page;
 import org.snaker.engine.access.QueryFilter;
+import org.snaker.engine.bean.K8splusOrderBean;
 import org.snaker.engine.entity.Order;
 import org.snaker.engine.test.TestSnakerBase;
 
@@ -14,7 +15,7 @@ import org.snaker.engine.test.TestSnakerBase;
 public class TestQueryOrder extends TestSnakerBase {
 	@Test
 	public void test() {
-		Page<Order> page = new Page<Order>();
+		Page<K8splusOrderBean> page = new Page<>();
 		System.out.println(engine.query().getActiveOrders(
 				new QueryFilter().setCreateTimeStart("2014-01-01").setProcessId("860e5edae536495a9f51937f435a1c01")));
 		System.out.println(engine.query().getActiveOrders(page, new QueryFilter()));

@@ -111,7 +111,12 @@ public interface ITaskService {
 	 * @param actors 参与者
 	 */
 	void removeTaskActor(String taskId, String... actors);
-	
+
+	/**
+	 * 向指定任务移除参与者
+	 */
+	void refreshTaskActor(String taskId, String... actors);
+
 	/**
 	 * 根据任务主键id、操作人撤回任务
 	 * @param taskId 任务id
@@ -159,4 +164,13 @@ public interface ITaskService {
      * @return
      */
     TaskModel getTaskModel(String taskId);
+
+	/**
+	 * 根据Task模型的assignee、assignmentHandler属性以及运行时数据，确定参与者
+	 * @param model 模型
+	 * @param execution 执行对象
+	 * @return 参与者数组
+	 */
+	String[] getTaskActors(TaskModel model, Execution execution);
+
 }

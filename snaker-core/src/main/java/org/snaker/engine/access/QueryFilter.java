@@ -104,7 +104,11 @@ public class QueryFilter implements Serializable {
 	 * 任务参与类型
 	 */
 	private Integer performType;
-	
+	/**
+	 * 任务参与者ID集合
+	 */
+	private String[] actorIds;
+
 	public String getProcessId() {
 		return processId;
 	}
@@ -291,4 +295,12 @@ public class QueryFilter implements Serializable {
     public boolean isOrderBySetted() {
         return (StringUtils.isNotBlank(orderBy) && StringUtils.isNotBlank(order));
     }
+
+	public String[] getActorIds() {
+		return actorIds;
+	}
+
+	public void setActorIds(String[] actorIds) {
+		this.actorIds = actorIds;
+	}
 }
