@@ -14,6 +14,7 @@
  */
 package org.snaker.engine.core;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -166,20 +167,22 @@ public class OrderService extends AccessService implements IOrderService {
 	 * 强制中止流程实例
 	 * @see org.snaker.engine.core.OrderService#terminate(String, String)
 	 */
-	public void terminate(String orderId) {
-		terminate(orderId, null);
+	public void terminate(String orderId, String errMsg) {
+		terminate(orderId, null, errMsg);
 	}
 
 	/**
 	 * 强制中止活动实例,并强制完成活动任务
 	 */
-	public void terminate(String orderId, String operator) {
+	public void terminate(String orderId, String operator, String errMsg) {
 		SnakerEngine engine = ServiceContext.getEngine();
 		List<Task> tasks = engine
 				.query()
 				.getActiveTasks(new QueryFilter().setOrderId(orderId));
+		Map<String, Object> args = new HashMap<>();
+		args.put("errMsg", errMsg);
 		for(Task task : tasks) {
-			engine.task().complete(task.getId(), operator);
+			engine.task().complete(task.getId(), operator, args);
 		}
 		Order order = access().getOrder(orderId);
 		HistoryOrder history = new HistoryOrder(order);

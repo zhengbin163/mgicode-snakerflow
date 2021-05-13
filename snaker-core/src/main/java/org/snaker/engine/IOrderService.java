@@ -76,15 +76,17 @@ public interface IOrderService {
 	/**
 	 * 流程实例强制终止
 	 * @param orderId 流程实例id
+	 * @param errMsg 终止原因
 	 */
-	void terminate(String orderId);
+	void terminate(String orderId, String errMsg);
 	
 	/**
 	 * 流程实例强制终止
 	 * @param orderId 流程实例id
 	 * @param operator 处理人员
+	 * @param errMsg 终止原因
 	 */
-	void terminate(String orderId, String operator);
+	void terminate(String orderId, String operator, String errMsg);
 
     /**
      * 唤醒历史流程实例
